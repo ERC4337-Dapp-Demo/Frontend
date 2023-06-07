@@ -41,7 +41,8 @@
 			"@/services/*": ["./src/services/*"],
 			"@/apis/*": ["./src/apis/*"],
 			"@/components/*": ["./src/components/*"],
-			"@types/*": ["./src/@types/*"]
+			"@types/*": ["./src/@types/*"],
+			"@enums/*": ["./src/@enums/*"]
 		}
 	},
 	"exclude": ["./out/**/*", "./node_modules/**/*", "cypress/**/*.ts"],

@@ -1,7 +1,5 @@
 import '@/styles/globals.scss';
 import 'antd/dist/reset.css';
-
-// import 'antd/dist/antd.css';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { AppProps } from 'next/app';
 import { useState } from 'react';
@@ -16,8 +14,8 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     new QueryClient({
       defaultOptions: {
         queries: {
-          refetchOnWindowFocus: false,
-          retry: false,
+          refetchOnWindowFocus: true,
+          retry: true,
         },
       },
     })
