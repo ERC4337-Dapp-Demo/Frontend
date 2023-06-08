@@ -42,7 +42,9 @@
 			"@/apis/*": ["./src/apis/*"],
 			"@/components/*": ["./src/components/*"],
 			"@types/*": ["./src/@types/*"],
-			"@enums/*": ["./src/@enums/*"]
+			"@enums/*": ["./src/@enums/*"],
+			"@assets/*": ["./src/assets/*"],
+			"@contexts/*": ["./src/contexts/*"]
 		}
 	},
 	"exclude": ["./out/**/*", "./node_modules/**/*", "cypress/**/*.ts"],
