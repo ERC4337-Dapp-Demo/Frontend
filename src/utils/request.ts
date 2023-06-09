@@ -3,12 +3,8 @@ import type {
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
-} from 'axios';
-import axios from 'axios';
-
-const client = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API}`,
-});
+} from "axios";
+import axios from "axios";
 
 /**
  *
@@ -19,8 +15,12 @@ const client = axios.create({
 
 export const request = async (
   { ...options }: AxiosRequestConfig<AxiosDefaults>,
-  auth: boolean
+  auth: boolean,
+  baseUrl: boolean = true
 ) => {
+  const client = axios.create({
+    baseURL: `${baseUrl ? process.env.NEXT_PUBLIC_API : ""}`,
+  });
   if (auth) {
     client.interceptors.request.use(
       async (config: InternalAxiosRequestConfig<AxiosRequestConfig>) => {
@@ -40,7 +40,7 @@ export const request = async (
         return response;
       },
       (error) => {
-        if (typeof window === 'undefined') {
+        if (typeof window === "undefined") {
           throw error;
         }
         return Promise.reject(error);

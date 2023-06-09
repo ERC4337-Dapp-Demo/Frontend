@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import YourNFT from "@/components/YourNFT";
 import { Web3Context, Web3StoreInterface } from "@/contexts/web3Context";
 import ExecutionOpService from "@/services/executionOp";
+import Listing from "@/components/Listing";
 
 const Index = () => {
   const [store, setStore] = useState<Web3StoreInterface | null>(null);
@@ -61,12 +62,14 @@ const Index = () => {
     setLoading({ ...loading, logout: true });
     if (web3AuthService !== null) {
       try {
-        await web3AuthService!.disconnect();
+        await web3AuthService.disconnect();
         setIsLogin(false);
       } catch (err: any) {
         console.error(err);
+        window.location.reload();
       }
     }
+    window.localStorage.removeItem("openlogin_store");
     setLoading({ ...loading, logout: false });
   };
 
@@ -89,7 +92,7 @@ const Index = () => {
         </RenderIf>
         <RenderIf isTrue={isLogin && store?.account.getSender() !== null}>
           <p>Your address: {store && store?.account.getSender()}</p>
-          <p>Your balance: {balance.toString()}</p>
+          <p>Your balance: {ethers.utils.formatEther(balance.toString())}</p>
           <p>Working Chain: GOERLI</p>
           <Button
             type="primary"
@@ -101,6 +104,7 @@ const Index = () => {
             Logout
           </Button>
           <YourNFT address={store?.account ? store.account.getSender() : ""} />
+          <Listing />
         </RenderIf>
       </div>
     </Web3Context.Provider>

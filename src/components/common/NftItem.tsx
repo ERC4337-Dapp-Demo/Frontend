@@ -10,16 +10,17 @@ import { ethers } from "ethers";
 import { ContractAddress } from "@/configs/contract";
 import MarketplaceAbi from "@/abis/Marketplace.json";
 import ERC721Abi from "@/abis/ERC721.json";
+import { NFTDataItem } from "@/@types/nft";
 
 const NftItem: React.FC<{
-  item: any;
+  item: NFTDataItem;
   state: NftItemState;
   isOwned: boolean;
   execution: ExecutionOpService;
   userOperation: UserOperationService;
 }> = ({ item, state, isOwned = false, userOperation, execution }) => {
-  const [api, contextHolder] = notification.useNotification();
   const [loading, setLoading] = useState<boolean>(false);
+  const [imgLoading, setImgLoading] = useState<boolean>(false);
   const [modalState, setModalState] = useState({
     listing: false,
     saling: false,
@@ -37,19 +38,28 @@ const NftItem: React.FC<{
   );
 
   const handleError = () => {
-    setLoading(true);
+    setImgLoading(true);
   };
 
   const handleListing = () => {
     setModalState({ ...modalState, listing: true });
   };
 
+  const handleCanceling = () => {
+    setModalState({ ...modalState, canceling: true });
+  };
+  const handleBuying = () => {
+    setModalState({ ...modalState, saling: true });
+  };
+
   const handleAcceptListing = async () => {
     setLoading(true);
+    setModalState({ ...modalState, listing: false });
+    console.log(item.tokenAddress.toString());
     try {
       console.log("Call to Approve");
       await execution.execute(
-        item.tokenAddress._value,
+        item.tokenAddress.toJSON(),
         ethers.BigNumber.from(0),
         erc721Contract.interface.encodeFunctionData("approve", [
           marketAddress,
@@ -62,13 +72,13 @@ const NftItem: React.FC<{
         ethers.BigNumber.from(0),
         item.contractType == "ERC721"
           ? marketContract.interface.encodeFunctionData("listItem", [
-              item.tokenAddress._value,
+              item.tokenAddress.toJSON(),
               item.tokenId.toString(),
               ethers.constants.AddressZero,
               selectPrice.toString(),
             ])
           : marketContract.interface.encodeFunctionData("listBulkItems", [
-              item.tokenAddress._value,
+              item.tokenAddress.toJSON(),
               item.tokenId.toString(),
               selectAmount.toString(),
               ethers.constants.AddressZero,
@@ -76,7 +86,7 @@ const NftItem: React.FC<{
             ])
       );
       console.log(tx);
-      api["success"]({
+      notification.success({
         message: "Listing Item Successfully",
         description: `View at https://goerli.etherscan.io/tx/${
           tx!.transactionHash
@@ -89,7 +99,7 @@ const NftItem: React.FC<{
         },
       });
     } catch (err: any) {
-      api["success"]({
+      notification.error({
         message: "Listing Item Failed",
         description: `Error: ${err?.message as string}`,
       });
@@ -99,6 +109,93 @@ const NftItem: React.FC<{
 
   const handleRefuseListing = () => {
     setModalState({ ...modalState, listing: false });
+  };
+
+  const handleAcceptCanceling = async () => {
+    setModalState({ ...modalState, canceling: false });
+    setLoading(true);
+    try {
+      if (!item?.marketId) {
+        throw new Error("Market id does not exist!");
+      }
+      console.log("Call to Market");
+      const tx = await execution.execute(
+        marketAddress,
+        ethers.BigNumber.from(0),
+        marketContract.interface.encodeFunctionData("cancelItem", [
+          item.tokenAddress.toString(),
+          item.tokenId.toString(),
+          item.marketId,
+        ])
+      );
+      console.log(tx);
+      notification.success({
+        message: "Cancel Listing Successfully",
+        description: `View at https://goerli.etherscan.io/tx/${
+          tx!.transactionHash
+        }`,
+        onClick: () => {
+          window.open(
+            `https://goerli.etherscan.io/tx/${tx!.transactionHash}`,
+            "_blank"
+          );
+        },
+      });
+    } catch (err: any) {
+      notification.error({
+        message: "Cancel Listing Failed",
+        description: `Error: ${err?.message as string}`,
+      });
+    }
+    setLoading(false);
+  };
+
+  const handleRefuseCanceling = () => {
+    setModalState({ ...modalState, canceling: false });
+  };
+
+  const handleAcceptBuying = async () => {
+    setModalState({ ...modalState, saling: false });
+    setLoading(true);
+    try {
+      if (!item?.marketId) {
+        throw new Error("Market id does not exist!");
+      }
+      console.log("Call to Market");
+      const tx = await execution.execute(
+        marketAddress,
+        item.price as ethers.BigNumber,
+        marketContract.interface.encodeFunctionData("buyItem", [
+          item.tokenAddress.toString(),
+          item.tokenId.toString(),
+          item.marketId,
+          selectAmount,
+        ])
+      );
+      console.log(tx);
+      notification.success({
+        message: "Buying Item Successfully",
+        description: `View at https://goerli.etherscan.io/tx/${
+          tx!.transactionHash
+        }`,
+        onClick: () => {
+          window.open(
+            `https://goerli.etherscan.io/tx/${tx!.transactionHash}`,
+            "_blank"
+          );
+        },
+      });
+    } catch (err: any) {
+      notification.error({
+        message: "Buying Item Failed",
+        description: `Error: ${err?.message as string}`,
+      });
+    }
+    setLoading(false);
+  };
+
+  const handleRefuseBuying = () => {
+    setModalState({ ...modalState, saling: false });
   };
 
   const handleSelectAmount = (e: any) => {
@@ -112,7 +209,6 @@ const NftItem: React.FC<{
 
   return (
     <>
-      {contextHolder}
       <Modal
         title="Listing Item"
         centered
@@ -128,7 +224,7 @@ const NftItem: React.FC<{
         <InputNumber
           className="w-full"
           placeholder="Please input number"
-          defaultValue={0}
+          defaultValue={1}
           onChange={handleSelectAmount}
         />
         <InputNumber
@@ -138,17 +234,51 @@ const NftItem: React.FC<{
           onChange={handleSelectPrice}
         />
       </Modal>
+      <Modal
+        title="Cancel Listing Item"
+        centered
+        open={modalState.canceling}
+        onOk={handleAcceptCanceling}
+        onCancel={handleRefuseCanceling}
+        width={600}
+      >
+        <h2 className="text-bold">
+          You are going to cancel listing an nft (Notice: the action is unable
+          to revert)
+        </h2>
+      </Modal>
+      <Modal
+        title="Buying Item"
+        centered
+        open={modalState.saling}
+        onOk={handleAcceptBuying}
+        onCancel={handleRefuseBuying}
+        width={600}
+      >
+        <h2 className="text-bold">
+          You are going to buy an nft (Notice: the action is unable to revert)
+        </h2>
+        <p>Please choose the quantity</p>
+        <InputNumber
+          className="w-full"
+          placeholder="Please input number"
+          defaultValue={1}
+          onChange={handleSelectAmount}
+        />
+      </Modal>
       <div id="nft-item" className="">
         <img
           src={
-            loading ? "/default.png" : getIpfsUrl(item.metadata.image as string)
+            imgLoading || !item?.image
+              ? "/default.png"
+              : getIpfsUrl(item?.image as string)
           }
           className="w-full max-h-[360px] mb-[12px]"
           width={360}
           height={360}
           onError={handleError}
         ></img>
-        <p>Name: {item.metadata.name as string}</p>
+        <p>Name: {(item.name || "UNKNOWN") as string}</p>
         <p>Amount: {item.amount as string}</p>
         <p>Type: {item.contractType as string}</p>
         <RenderIf isTrue={state == NftItemState.INVENTORY}>
@@ -161,15 +291,25 @@ const NftItem: React.FC<{
             List Item
           </Button>
         </RenderIf>
-        <RenderIf isTrue={state == NftItemState.MY_LISTING}>
-          <Button type="primary" className="bg-[#1677ff] w-full">
+        <RenderIf isTrue={state == NftItemState.LISTING && isOwned == true}>
+          <p>Price: {item.price ? ethers.utils.formatEther(item.price) : 0}</p>
+          <Button
+            type="primary"
+            className="bg-[#1677ff] w-full"
+            onClick={handleCanceling}
+            loading={loading}
+          >
             Cancel Item
           </Button>
         </RenderIf>
-        <RenderIf
-          isTrue={state == NftItemState.ALL_LISTING && isOwned == false}
-        >
-          <Button type="primary" className="bg-[#1677ff] w-full">
+        <RenderIf isTrue={state == NftItemState.LISTING && isOwned == false}>
+          <p>Price: {item.price ? ethers.utils.formatEther(item.price) : 0}</p>
+          <Button
+            type="primary"
+            className="bg-[#1677ff] w-full"
+            onClick={handleBuying}
+            loading={loading}
+          >
             Buy Item
           </Button>
         </RenderIf>

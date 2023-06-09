@@ -44,7 +44,8 @@
 			"@types/*": ["./src/@types/*"],
 			"@enums/*": ["./src/@enums/*"],
 			"@assets/*": ["./src/assets/*"],
-			"@contexts/*": ["./src/contexts/*"]
+			"@contexts/*": ["./src/contexts/*"],
+			"@graphql/*": ["./src/graphql"]
 		}
 	},
 	"exclude": ["./out/**/*", "./node_modules/**/*", "cypress/**/*.ts"],

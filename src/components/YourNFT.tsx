@@ -1,5 +1,4 @@
 import { useGetAllNfts } from "@/apis/nftApi";
-import { getIpfsUrl } from "@/configs/getUrl";
 import { Button } from "antd";
 import React from "react";
 import NftItem from "./common/NftItem";
@@ -11,7 +10,6 @@ const YourNFT: React.FC<{ address: string }> = ({ address }) => {
   const { store } = useContext<Web3ContextType | null>(
     Web3Context
   ) as Web3ContextType;
-  console.log(store);
   const { data, refetch } = useGetAllNfts(address);
 
   return (
@@ -31,12 +29,20 @@ const YourNFT: React.FC<{ address: string }> = ({ address }) => {
           data.result.map((item: any, index) => {
             return (
               <NftItem
-                item={item}
+                item={{
+                  image: item.metadata?.image || null,
+                  name: item.name,
+                  tokenAddress: item.tokenAddress,
+                  tokenId: item.tokenId,
+                  contractType: item.contractType,
+                  amount: item.amount,
+                  owner: item.ownerOf as string | undefined,
+                }}
                 state={NftItemState.INVENTORY}
                 isOwned={false}
                 execution={store!.executionOpService}
                 userOperation={store!.userOpService}
-                key={index}
+                key={`Your NFT - ${index}`}
               />
             );
           })}
