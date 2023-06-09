@@ -1,6 +1,6 @@
-import 'firebase/compat/storage';
+import 'firebase/compat/storage'
 
-import firebase from 'firebase/compat/app';
+import firebase from 'firebase/compat/app'
 
 // Configure for firebase
 const firebaseConfig = {
@@ -11,9 +11,9 @@ const firebaseConfig = {
   messagingSenderId: '',
   appId: '',
   measurementId: '',
-};
-firebase.initializeApp(firebaseConfig);
+}
+firebase.initializeApp(firebaseConfig)
 
-const storage = firebase.storage();
+const storage = firebase.storage()
 
-export { firebase, storage };
+export { firebase, storage }

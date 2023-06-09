@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from '@apollo/client'
 
 const GET_ALL_ACTIVE_LISTING = (first: number = 10, skip: number = 0) => gql`
   query {
@@ -17,6 +17,6 @@ const GET_ALL_ACTIVE_LISTING = (first: number = 10, skip: number = 0) => gql`
       buyer
     }
   }
-`;
+`
 
-export { GET_ALL_ACTIVE_LISTING };
+export { GET_ALL_ACTIVE_LISTING }

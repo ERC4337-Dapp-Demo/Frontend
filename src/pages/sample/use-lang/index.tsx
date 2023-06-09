@@ -1,9 +1,9 @@
-import { Button } from 'antd';
+import { Button } from 'antd'
 
-import useTranslate from '@/hooks/useTranslate';
+import useTranslate from '@/hooks/useTranslate'
 
 const UseLang = () => {
-  const { translate, changeLanguage } = useTranslate();
+  const { translate, changeLanguage } = useTranslate()
 
   return (
     <div>
@@ -13,7 +13,7 @@ const UseLang = () => {
       <Button onClick={() => changeLanguage('en')}>En</Button>
       <Button onClick={() => changeLanguage('jp')}>Jp</Button>
     </div>
-  );
-};
+  )
+}
 
-export default UseLang;
+export default UseLang

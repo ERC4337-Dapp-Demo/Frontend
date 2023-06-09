@@ -1,15 +1,15 @@
-import '@/styles/globals.scss';
-import 'antd/dist/reset.css';
+import '@/styles/globals.scss'
+import 'antd/dist/reset.css'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { AppProps } from 'next/app';
-import { useEffect, useState } from 'react';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/lib/integration/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import type { AppProps } from 'next/app'
+import { useEffect, useState } from 'react'
+import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/lib/integration/react'
 
-import store, { persistor } from '@/configs/redux';
-import LayoutDefault from '@/layouts/LayoutDefault';
-import MoralisService from '@/services/moralis';
+import store, { persistor } from '@/configs/redux'
+import LayoutDefault from '@/layouts/LayoutDefault'
+import MoralisService from '@/services/moralis'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const [queryClient] = useState(
@@ -20,12 +20,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           retry: true,
         },
       },
-    })
-  );
+    }),
+  )
 
   useEffect(() => {
-    MoralisService.start();
-  }, []);
+    MoralisService.start()
+  }, [])
 
   return (
     <Provider store={store}>
@@ -37,7 +37,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
         </QueryClientProvider>
       </PersistGate>
     </Provider>
-  );
-};
+  )
+}
 
-export default MyApp;
+export default MyApp

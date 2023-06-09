@@ -3,4 +3,4 @@ export default Object.freeze({
     avatar: 'Hình đại diện',
     banner: 'Ảnh bìa',
   },
-});
+})

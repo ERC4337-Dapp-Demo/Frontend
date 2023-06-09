@@ -1,12 +1,12 @@
-import { useJokeQuery } from '@/apis/jokeApi';
+import { useJokeQuery } from '@/apis/jokeApi'
 
 const SWR = () => {
-  const { data } = useJokeQuery();
+  const { data } = useJokeQuery()
   return (
     <div>
       Joke: {data?.data?.setup} - {data?.data?.delivery}
     </div>
-  );
-};
+  )
+}
 
-export default SWR;
+export default SWR

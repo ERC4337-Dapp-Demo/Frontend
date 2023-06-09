@@ -1,13 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'
 
-import { request } from '@/utils/request';
+import { request } from '@/utils/request'
 
 const jokeApi = {
   async getRandomApi() {
-    return request({ baseURL: 'https://v2.jokeapi.dev/joke/Any' }, false);
+    return request({ baseURL: 'https://v2.jokeapi.dev/joke/Any' }, false)
   },
-};
+}
 
 export const useJokeQuery = () => {
-  return useQuery(['joke'], () => jokeApi.getRandomApi());
-};
+  return useQuery(['joke'], () => jokeApi.getRandomApi())
+}

@@ -1,9 +1,9 @@
-import { Button } from 'antd';
+import { Button } from 'antd'
 
-import { useToggle } from '@/hooks/useToggle';
+import { useToggle } from '@/hooks/useToggle'
 
 const UseToggle = () => {
-  const [state, toggle] = useToggle('chicken', ['chicken', 'dead-chicken']);
+  const [state, toggle] = useToggle('chicken', ['chicken', 'dead-chicken'])
 
   return (
     <div>
@@ -11,7 +11,7 @@ const UseToggle = () => {
       <Button onClick={() => toggle(undefined)}>Toggle By Undefined</Button>
       <Button onClick={() => toggle('dead-chicken')}>Toggle By Value</Button>
     </div>
-  );
-};
+  )
+}
 
-export default UseToggle;
+export default UseToggle

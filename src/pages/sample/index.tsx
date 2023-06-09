@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
 const Sample = () => {
-  const { push } = useRouter();
+  const { push } = useRouter()
   return (
     <>
       <h2>Here is example of using sample code</h2>
@@ -13,7 +13,7 @@ const Sample = () => {
         <li onClick={() => push('/sample/redux-reducer')}>Demo Redux</li>
       </ul>
     </>
-  );
-};
+  )
+}
 
-export default Sample;
+export default Sample

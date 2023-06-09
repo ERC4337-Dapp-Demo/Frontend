@@ -3,4 +3,4 @@ export default Object.freeze({
     avatar: 'アバター',
     banner: 'バナー',
   },
-});
+})

@@ -1,12 +1,12 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from 'react'
 
 interface RenderIfProps {
-  isTrue: boolean;
-  children: ReactNode;
+  isTrue: boolean
+  children: ReactNode
 }
 
 const RenderIf: React.FC<RenderIfProps> = ({ isTrue, children }) => {
-  return isTrue ? <>{children}</> : null;
-};
+  return isTrue ? <>{children}</> : null
+}
 
-export default RenderIf;
+export default RenderIf

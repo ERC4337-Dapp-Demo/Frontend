@@ -1,49 +1,49 @@
-import type { ethers } from 'ethers';
-import { Client } from 'userop';
-import type { UserOperationEventEvent } from 'userop/dist/typechain/EntryPoint';
+import type { ethers } from 'ethers'
+import { Client } from 'userop'
+import type { UserOperationEventEvent } from 'userop/dist/typechain/EntryPoint'
 
-import type UserOperationService from './userOperation';
+import type UserOperationService from './userOperation'
 
 class ExecutionOpService {
-  protected client: Client | null;
+  protected client: Client | null
 
-  protected op: UserOperationService;
+  protected op: UserOperationService
 
   constructor(op: UserOperationService) {
-    this.op = op;
-    this.client = null;
+    this.op = op
+    this.client = null
   }
 
   async buildClient() {
-    const client = await Client.init(this.op.rpcUrl, this.op.entryPoint);
-    this.client = client;
+    const client = await Client.init(this.op.rpcUrl, this.op.entryPoint)
+    this.client = client
   }
 
   setOp(op: UserOperationService) {
-    this.op = op;
+    this.op = op
   }
 
   async execute(
     to: string,
     amount: ethers.BigNumber,
-    data: ethers.utils.BytesLike
+    data: ethers.utils.BytesLike,
   ): Promise<UserOperationEventEvent | null> {
     if (!this.client) {
-      throw new Error('Please build client first!');
+      throw new Error('Please build client first!')
     }
 
     const response = await this.client.sendUserOperation(
       this.op.getAccount().execute(to, amount, data),
       {
         onBuild: (opData) => {
-          console.log('Signed UserOperation:', opData);
+          console.log('Signed UserOperation:', opData)
         },
-      }
-    );
+      },
+    )
 
-    console.log(response);
-    return response.wait();
+    console.log(response)
+    return response.wait()
   }
 }
 
-export default ExecutionOpService;
+export default ExecutionOpService

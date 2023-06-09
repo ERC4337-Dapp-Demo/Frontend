@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'false',
-});
-const path = require('path');
+})
+const path = require('path')
 
 module.exports = withBundleAnalyzer({
   eslint: {
@@ -23,4 +23,4 @@ module.exports = withBundleAnalyzer({
   sassOptions: {
     includePaths: [path.join(__dirname, 'src', 'styles')],
   },
-});
+})

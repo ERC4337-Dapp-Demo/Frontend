@@ -12,7 +12,8 @@
 				"singleQuote": true,
 				"endOfLine": "auto"
 			}
-		]
+		],
+		"no-empty-pattern": "off"
 	},
 	"overrides": [
 		// Configuration for TypeScript files
