@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NftItem from "./common/NftItem";
 import { NftItemState } from "../enums/nft";
 import { useContext } from "react";

@@ -1,4 +1,3 @@
-import React from "react";
 import { NftItemState } from "@/enums/nft";
 import { useState } from "react";
 import { getIpfsUrl } from "@/configs/getUrl";

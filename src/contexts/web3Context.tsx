@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import { createContext } from "react";
 import Web3AuthService from "@/services/web3Auth";
 import UserOperationService from "@/services/userOperation";
 import { Presets } from "userop";

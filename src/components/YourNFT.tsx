@@ -1,6 +1,5 @@
 import { useGetAllNfts } from "@/apis/nftApi";
 import { Button } from "antd";
-import React from "react";
 import NftItem from "./common/NftItem";
 import { NftItemState } from "../enums/nft";
 import { useContext } from "react";

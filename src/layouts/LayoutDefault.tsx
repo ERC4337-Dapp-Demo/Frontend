@@ -1,10 +1,9 @@
-import Head from 'next/head';
-import type { ReactNode } from 'react';
-import React from 'react';
+import Head from "next/head";
+import type { ReactNode } from "react";
 
 // import GeneralModal from 'src/components/common/GeneralModal';
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 type Props = {
   children: ReactNode;
@@ -13,7 +12,7 @@ type Props = {
 
 const LayoutDocument = ({
   children,
-  title = 'This is the default title',
+  title = "This is the default title",
 }: Props) => {
   return (
     <>
