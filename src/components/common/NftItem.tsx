@@ -1,15 +1,17 @@
-import { NftItemState } from "@/enums/nft";
-import { useState } from "react";
-import { getIpfsUrl } from "@/configs/getUrl";
-import RenderIf from "./RenderIf";
-import { Button, Modal, InputNumber, notification } from "antd";
-import ExecutionOpService from "@/services/executionOp";
-import UserOperationService from "@/services/userOperation";
+import { Button, InputNumber, Modal, notification } from "antd";
 import { ethers } from "ethers";
-import { ContractAddress } from "@/configs/contract";
-import MarketplaceAbi from "@/abis/Marketplace.json";
+import { useState } from "react";
+
+import type { NFTDataItem } from "@/@types/nft";
 import ERC721Abi from "@/abis/ERC721.json";
-import { NFTDataItem } from "@/@types/nft";
+import MarketplaceAbi from "@/abis/Marketplace.json";
+import { ContractAddress } from "@/configs/contract";
+import { getIpfsUrl } from "@/configs/getUrl";
+import { NftItemState } from "@/enums/nft";
+import type ExecutionOpService from "@/services/executionOp";
+import type UserOperationService from "@/services/userOperation";
+
+import RenderIf from "./RenderIf";
 
 const NftItem: React.FC<{
   item: NFTDataItem;
@@ -69,7 +71,7 @@ const NftItem: React.FC<{
       const tx = await execution.execute(
         marketAddress,
         ethers.BigNumber.from(0),
-        item.contractType == "ERC721"
+        item.contractType === "ERC721"
           ? marketContract.interface.encodeFunctionData("listItem", [
               item.tokenAddress.toJSON(),
               item.tokenId.toString(),
@@ -272,7 +274,7 @@ const NftItem: React.FC<{
               ? "/default.png"
               : getIpfsUrl(item?.image as string)
           }
-          className="w-full max-h-[360px] mb-[12px]"
+          className="mb-[12px] max-h-[360px] w-full"
           width={360}
           height={360}
           onError={handleError}
@@ -280,32 +282,32 @@ const NftItem: React.FC<{
         <p>Name: {(item.name || "UNKNOWN") as string}</p>
         <p>Amount: {item.amount as string}</p>
         <p>Type: {item.contractType as string}</p>
-        <RenderIf isTrue={state == NftItemState.INVENTORY}>
+        <RenderIf isTrue={state === NftItemState.INVENTORY}>
           <Button
             type="primary"
             onClick={handleListing}
-            className="bg-[#1677ff] w-full"
+            className="w-full bg-[#1677ff]"
             loading={loading}
           >
             List Item
           </Button>
         </RenderIf>
-        <RenderIf isTrue={state == NftItemState.LISTING && isOwned == true}>
+        <RenderIf isTrue={state === NftItemState.LISTING && isOwned === true}>
           <p>Price: {item.price ? ethers.utils.formatEther(item.price) : 0}</p>
           <Button
             type="primary"
-            className="bg-[#1677ff] w-full"
+            className="w-full bg-[#1677ff]"
             onClick={handleCanceling}
             loading={loading}
           >
             Cancel Item
           </Button>
         </RenderIf>
-        <RenderIf isTrue={state == NftItemState.LISTING && isOwned == false}>
+        <RenderIf isTrue={state === NftItemState.LISTING && isOwned === false}>
           <p>Price: {item.price ? ethers.utils.formatEther(item.price) : 0}</p>
           <Button
             type="primary"
-            className="bg-[#1677ff] w-full"
+            className="w-full bg-[#1677ff]"
             onClick={handleBuying}
             loading={loading}
           >

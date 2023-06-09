@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 const GET_ALL_ACTIVE_LISTING = (first: number = 10, skip: number = 0) => gql`
   query {

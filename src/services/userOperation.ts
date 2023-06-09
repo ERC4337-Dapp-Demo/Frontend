@@ -1,22 +1,29 @@
-import { ethers } from "ethers";
-import { Presets } from "userop";
-import { ContractAddress } from "@/configs/addressOp";
-import { ChainId } from "@/enums/web3Auth";
+import { ethers } from 'ethers';
+import { Presets } from 'userop';
+
+import { ContractAddress } from '@/configs/addressOp';
+import { ChainId } from '@/enums/web3Auth';
 
 class UserOperationService {
   public chainId: string;
+
   protected privateKey: string;
+
   protected paymasterUrl: string;
 
   protected paymaster: any;
+
   protected account: Presets.Builder.SimpleAccount | null;
 
   protected provider: ethers.providers.JsonRpcProvider;
+
   protected signer: ethers.Wallet;
 
   public rpcUrl: string;
-  public entryPoint: string = "";
-  public accountFactory: string = "";
+
+  public entryPoint: string = '';
+
+  public accountFactory: string = '';
 
   constructor(
     privateKey: string,
@@ -50,14 +57,14 @@ class UserOperationService {
 
   getAccount(): Presets.Builder.SimpleAccount {
     if (!this.account) {
-      throw new Error("Please create account first!");
+      throw new Error('Please create account first!');
     }
     return this.account;
   }
 
   async getBalance(): Promise<ethers.BigNumber> {
     if (!this.account) {
-      throw new Error("Please create account first!");
+      throw new Error('Please create account first!');
     }
     const balance = this.provider.getBalance(this.account!.getSender());
     return balance;
@@ -65,7 +72,7 @@ class UserOperationService {
 
   buildPaymaster() {
     this.paymaster = Presets.Middleware.verifyingPaymaster(this.paymasterUrl, {
-      type: "payg",
+      type: 'payg',
     });
   }
 

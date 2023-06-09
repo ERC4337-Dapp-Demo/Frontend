@@ -1,8 +1,10 @@
-import ExecutionOpService from "@/services/executionOp";
-import { NftItemState } from "../enums/nft";
-import UserOperationService from "@/services/userOperation";
-import { EvmAddress } from "@moralisweb3/common-evm-utils";
-import { ethers } from "ethers";
+import type { EvmAddress } from '@moralisweb3/common-evm-utils';
+import type { ethers } from 'ethers';
+
+import type ExecutionOpService from '@/services/executionOp';
+import type UserOperationService from '@/services/userOperation';
+
+import type { NftItemState } from '../enums/nft';
 
 export interface NFTDataItem {
   image: string | null;

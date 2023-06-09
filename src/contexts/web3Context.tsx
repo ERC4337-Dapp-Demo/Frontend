@@ -1,8 +1,9 @@
-import { createContext } from "react";
-import Web3AuthService from "@/services/web3Auth";
-import UserOperationService from "@/services/userOperation";
-import { Presets } from "userop";
-import ExecutionOpService from "@/services/executionOp";
+import { createContext } from 'react';
+import type { Presets } from 'userop';
+
+import type ExecutionOpService from '@/services/executionOp';
+import type UserOperationService from '@/services/userOperation';
+import type Web3AuthService from '@/services/web3Auth';
 
 export interface Web3StoreInterface {
   web3AuthService: Web3AuthService;

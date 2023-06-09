@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import NftItem from "./common/NftItem";
-import { NftItemState } from "../enums/nft";
-import { useContext } from "react";
-import { Web3Context, Web3ContextType } from "@/contexts/web3Context";
 import { useQuery as useApolloQuery } from "@apollo/client";
+import { useContext, useEffect, useState } from "react";
+
+import type { Web3ContextType } from "@/contexts/web3Context";
+import { Web3Context } from "@/contexts/web3Context";
 import { GET_ALL_ACTIVE_LISTING } from "@/graphql/marketplace";
 import apolloClient from "@/services/apollo";
 import { fetchMetadataFromUrl } from "@/services/metadata";
+
+import { NftItemState } from "../enums/nft";
+import NftItem from "./common/NftItem";
 
 const Listing: React.FC<{}> = ({}) => {
   const { store } = useContext<Web3ContextType | null>(
@@ -34,8 +36,8 @@ const Listing: React.FC<{}> = ({}) => {
 
   return (
     <div id="your-nft">
-      <div className="flex items-center mt-[40px] mb-[20px]">
-        <h2 className="mr-[16px] mb-0 text-[36px] text-bold">Listing</h2>
+      <div className="mt-[40px] mb-[20px] flex items-center">
+        <h2 className="text-bold mr-[16px] mb-0 text-[36px]">Listing</h2>
       </div>
       <div id="nfts" className="grid grid-cols-4 gap-[12px]">
         {itemData &&
@@ -54,7 +56,7 @@ const Listing: React.FC<{}> = ({}) => {
                   price: item.price,
                 }}
                 isOwned={
-                  item.lister.toLowerCase() ==
+                  item.lister.toLowerCase() ===
                   store!.account.getSender().toLowerCase()
                 }
                 state={NftItemState.LISTING}

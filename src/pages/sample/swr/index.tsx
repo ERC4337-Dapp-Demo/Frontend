@@ -1,4 +1,4 @@
-import { useJokeQuery } from "@/apis/jokeApi";
+import { useJokeQuery } from '@/apis/jokeApi';
 
 const SWR = () => {
   const { data } = useJokeQuery();

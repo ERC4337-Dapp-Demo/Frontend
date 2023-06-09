@@ -1,5 +1,5 @@
-import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
+import Moralis from "moralis";
 
 class MoralisService {
   static async start() {
@@ -9,7 +9,9 @@ class MoralisService {
           apiKey: process.env.NEXT_PUBLIC_MORALIS_API_KEY,
         });
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   // TODO: add limit and cursor for pagination

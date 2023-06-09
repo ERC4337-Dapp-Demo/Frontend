@@ -1,13 +1,15 @@
-import { Button } from "antd";
-import { useState } from "react";
-import Web3AuthService from "@/services/web3Auth";
-import RenderIf from "@/components/common/RenderIf";
-import UserOperationService from "@/services/userOperation";
-import { ethers } from "ethers";
-import YourNFT from "@/components/YourNFT";
-import { Web3Context, Web3StoreInterface } from "@/contexts/web3Context";
-import ExecutionOpService from "@/services/executionOp";
-import Listing from "@/components/Listing";
+import { Button } from 'antd';
+import { ethers } from 'ethers';
+import { useState } from 'react';
+
+import RenderIf from '@/components/common/RenderIf';
+import Listing from '@/components/Listing';
+import YourNFT from '@/components/YourNFT';
+import type { Web3StoreInterface } from '@/contexts/web3Context';
+import { Web3Context } from '@/contexts/web3Context';
+import ExecutionOpService from '@/services/executionOp';
+import UserOperationService from '@/services/userOperation';
+import Web3AuthService from '@/services/web3Auth';
 
 const Index = () => {
   const [store, setStore] = useState<Web3StoreInterface | null>(null);
@@ -69,7 +71,7 @@ const Index = () => {
         window.location.reload();
       }
     }
-    window.localStorage.removeItem("openlogin_store");
+    window.localStorage.removeItem('openlogin_store');
     setLoading({ ...loading, logout: false });
   };
 
@@ -103,7 +105,7 @@ const Index = () => {
           >
             Logout
           </Button>
-          <YourNFT address={store?.account ? store.account.getSender() : ""} />
+          <YourNFT address={store?.account ? store.account.getSender() : ''} />
           <Listing />
         </RenderIf>
       </div>

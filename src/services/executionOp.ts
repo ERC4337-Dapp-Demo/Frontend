@@ -1,10 +1,12 @@
-import { Client } from "userop";
-import UserOperationService from "./userOperation";
-import { ethers } from "ethers";
-import { UserOperationEventEvent } from "userop/dist/typechain/EntryPoint";
+import type { ethers } from 'ethers';
+import { Client } from 'userop';
+import type { UserOperationEventEvent } from 'userop/dist/typechain/EntryPoint';
+
+import type UserOperationService from './userOperation';
 
 class ExecutionOpService {
   protected client: Client | null;
+
   protected op: UserOperationService;
 
   constructor(op: UserOperationService) {
@@ -27,14 +29,14 @@ class ExecutionOpService {
     data: ethers.utils.BytesLike
   ): Promise<UserOperationEventEvent | null> {
     if (!this.client) {
-      throw new Error("Please build client first!");
+      throw new Error('Please build client first!');
     }
 
     const response = await this.client.sendUserOperation(
       this.op.getAccount().execute(to, amount, data),
       {
         onBuild: (opData) => {
-          console.log("Signed UserOperation:", opData);
+          console.log('Signed UserOperation:', opData);
         },
       }
     );

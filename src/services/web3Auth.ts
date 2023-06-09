@@ -1,14 +1,15 @@
-import {
-  CHAIN_NAMESPACES,
-  SafeEventEmitterProvider,
-  UserAuthInfo,
-} from "@web3auth/base";
-import { Web3AuthOptions, Web3Auth } from "@web3auth/modal";
+import type { SafeEventEmitterProvider, UserAuthInfo } from "@web3auth/base";
+import { CHAIN_NAMESPACES } from "@web3auth/base";
+import type { Web3AuthOptions } from "@web3auth/modal";
+import { Web3Auth } from "@web3auth/modal";
+
 import { AuthMode, ChainId, Web3AuthNetwork } from "@/enums/web3Auth";
 
 class Web3AuthService {
   protected defaultConfig: Web3AuthOptions;
+
   protected currentConfig: Web3AuthOptions;
+
   protected web3Auth: Web3Auth | null;
 
   constructor(clientId: string = "", chainId: string = ChainId.GOERLI) {
@@ -55,7 +56,7 @@ class Web3AuthService {
   }
 
   async getPrivateKey(): Promise<string> {
-    if (this.checkInitializeWeb3Auth() == false) {
+    if (this.checkInitializeWeb3Auth() === false) {
       throw new Error("Not build web3 auth yet");
     }
     return (this.web3Auth!.provider as SafeEventEmitterProvider).request({
@@ -64,35 +65,35 @@ class Web3AuthService {
   }
 
   async authenticateUser(): Promise<UserAuthInfo> {
-    if (this.checkInitializeWeb3Auth() == false) {
+    if (this.checkInitializeWeb3Auth() === false) {
       throw new Error("Not build web3 auth yet");
     }
     return this.web3Auth!.authenticateUser();
   }
 
   async connect(): Promise<SafeEventEmitterProvider | null> {
-    if (this.checkInitializeWeb3Auth() == false) {
+    if (this.checkInitializeWeb3Auth() === false) {
       throw new Error("Not build web3 auth yet");
     }
     return this.web3Auth!.connect() as Promise<SafeEventEmitterProvider | null>;
   }
 
   async disconnect(): Promise<void> {
-    if (this.checkInitializeWeb3Auth() == false) {
+    if (this.checkInitializeWeb3Auth() === false) {
       throw new Error("Not build web3 auth yet");
     }
     await this.web3Auth!.logout();
   }
 
   async initialize(): Promise<void> {
-    if (this.checkInitializeWeb3Auth() == false) {
+    if (this.checkInitializeWeb3Auth() === false) {
       throw new Error("Not build web3 auth yet");
     }
     await this.web3Auth!.initModal();
   }
 
   private checkInitializeWeb3Auth(): boolean {
-    return !(this.web3Auth == null);
+    return !(this.web3Auth === null);
   }
 }
 

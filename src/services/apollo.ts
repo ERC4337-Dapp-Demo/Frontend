@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 const baseUrl =
   process.env.NEXT_PUBLIC_SUBGRAPH_API_KEY &&

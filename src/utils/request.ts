@@ -3,8 +3,8 @@ import type {
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
-} from "axios";
-import axios from "axios";
+} from 'axios';
+import axios from 'axios';
 
 /**
  *
@@ -19,7 +19,7 @@ export const request = async (
   baseUrl: boolean = true
 ) => {
   const client = axios.create({
-    baseURL: `${baseUrl ? process.env.NEXT_PUBLIC_API : ""}`,
+    baseURL: `${baseUrl ? process.env.NEXT_PUBLIC_API : ''}`,
   });
   if (auth) {
     client.interceptors.request.use(
@@ -40,7 +40,7 @@ export const request = async (
         return response;
       },
       (error) => {
-        if (typeof window === "undefined") {
+        if (typeof window === 'undefined') {
           throw error;
         }
         return Promise.reject(error);

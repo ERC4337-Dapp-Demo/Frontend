@@ -1,5 +1,5 @@
-import { request } from "@/utils/request";
 import { getIpfsUrl } from "@/configs/getUrl";
+import { request } from "@/utils/request";
 
 interface Metadata {
   image?: string;
@@ -10,15 +10,16 @@ const fetchMetadataFromUrl = async (url: string) => {
   try {
     const data = await request(
       {
-        url: getIpfsUrl(url ? url : "NULL"),
+        url: getIpfsUrl(url || "NULL"),
         method: "GET",
       },
       false,
       false
     );
     metadata = data?.data || {};
-  } catch (err) {}
-
+  } catch (err) {
+    console.error(err);
+  }
   return metadata as Metadata;
 };
 

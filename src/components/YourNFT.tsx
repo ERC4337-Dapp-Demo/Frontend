@@ -1,9 +1,12 @@
-import { useGetAllNfts } from "@/apis/nftApi";
-import { Button } from "antd";
-import NftItem from "./common/NftItem";
-import { NftItemState } from "../enums/nft";
-import { useContext } from "react";
-import { Web3Context, Web3ContextType } from "@/contexts/web3Context";
+import { Button } from 'antd';
+import { useContext } from 'react';
+
+import { useGetAllNfts } from '@/apis/nftApi';
+import type { Web3ContextType } from '@/contexts/web3Context';
+import { Web3Context } from '@/contexts/web3Context';
+
+import { NftItemState } from '../enums/nft';
+import NftItem from './common/NftItem';
 
 const YourNFT: React.FC<{ address: string }> = ({ address }) => {
   const { store } = useContext<Web3ContextType | null>(
@@ -13,8 +16,8 @@ const YourNFT: React.FC<{ address: string }> = ({ address }) => {
 
   return (
     <div id="your-nft">
-      <div className="flex items-center mt-[40px] mb-[20px]">
-        <h2 className="mr-[16px] mb-0 text-[36px] text-bold">Your NFT</h2>
+      <div className="mt-[40px] mb-[20px] flex items-center">
+        <h2 className="text-bold mr-[16px] mb-0 text-[36px]">Your NFT</h2>
         <Button
           onClick={() => {
             refetch();

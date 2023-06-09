@@ -1,8 +1,8 @@
-import { Button } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { Button } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 
-import type { AppState } from "@/configs/redux";
-import { decrement, increment } from "@/reducers/counter";
+import type { AppState } from '@/configs/redux';
+import { decrement, increment } from '@/reducers/counter';
 
 const ReduxReducer = () => {
   const dispatch = useDispatch();
