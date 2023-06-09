@@ -1,26 +1,20 @@
 import { Button } from "antd";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import Web3AuthService from "@/services/web3Auth";
-import { Web3Auth } from "@web3auth/modal";
-import { SafeEventEmitterProvider, UserAuthInfo } from "@web3auth/base";
 import RenderIf from "@/components/common/RenderIf";
 import UserOperationService from "@/services/userOperation";
-import { Presets } from "userop";
 import { ethers } from "ethers";
 import YourNFT from "@/components/YourNFT";
-import { Web3Context } from "@/contexts/web3Context";
+import { Web3Context, Web3StoreInterface } from "@/contexts/web3Context";
+import ExecutionOpService from "@/services/executionOp";
 
 const Index = () => {
-  const [web3AuthService, setWeb3AuthService] =
-    useState<Web3AuthService | null>(
-      new Web3AuthService(
-        process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID
-      ).buildWeb3Auth()
-    );
-  const [useropService, setUseropService] =
-    useState<UserOperationService | null>(null);
-  const [account, setAccount] = useState<Presets.Builder.SimpleAccount | null>(
-    null
+  const [store, setStore] = useState<Web3StoreInterface | null>(null);
+  const web3AuthService = new Web3AuthService(
+    process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID
+  ).buildWeb3Auth();
+  const [balance, setBalance] = useState<ethers.BigNumber>(
+    ethers.BigNumber.from(0)
   );
 
   const [isLogin, setIsLogin] = useState<boolean>(false);
@@ -42,17 +36,19 @@ const Index = () => {
           web3AuthService.getPrivateKey(),
         ]);
         const userOpService = new UserOperationService(privateKey);
-        const account = await userOpService.createAccount();
-        // const balance = (await provider!.sendAsync(
-        //   "eth_getBalance",
-        //   account.getSender()
-        // )) as ethers.BigNumber;
+        await userOpService.createAccount();
+        const executionOpService = new ExecutionOpService(userOpService);
+        await executionOpService.buildClient();
+        const account = userOpService.getAccount();
+        const balance = await userOpService.getBalance();
 
-        // console.log(balance);
-
-        // setBalance(balance);
-        setAccount!(account);
-        setUseropService!(userOpService);
+        setBalance(balance);
+        setStore({
+          web3AuthService,
+          userOpService,
+          executionOpService,
+          account,
+        });
         setIsLogin(true);
       } catch (err: any) {
         console.error(err);
@@ -74,22 +70,10 @@ const Index = () => {
     setLoading({ ...loading, logout: false });
   };
 
-  const handleTransfer = async () => {
-    const tx = await useropService?.simpleTransfer(
-      "0x0deB52499C2e9F3921c631cb6Ad3522C576d5484",
-      ethers.utils.parseEther("0.01")
-    );
-    console.log(tx);
-  };
-
   return (
     <Web3Context.Provider
       value={{
-        web3AuthService,
-        account,
-        useropService,
-        setUseropService,
-        setAccount,
+        store,
       }}
     >
       <div id="home" className="px-[12px]">
@@ -103,17 +87,10 @@ const Index = () => {
             Login
           </Button>
         </RenderIf>
-        <RenderIf isTrue={isLogin && account?.getSender() !== null}>
-          <p>Your address: {account && account!.getSender()}</p>
+        <RenderIf isTrue={isLogin && store?.account.getSender() !== null}>
+          <p>Your address: {store && store?.account.getSender()}</p>
+          <p>Your balance: {balance.toString()}</p>
           <p>Working Chain: GOERLI</p>
-          <Button
-            type="primary"
-            className="bg-[#1677ff]"
-            onClick={handleTransfer}
-            loading={loading.execute}
-          >
-            Simple Transfer
-          </Button>
           <Button
             type="primary"
             className="bg-[#1677ff]"
@@ -123,7 +100,7 @@ const Index = () => {
           >
             Logout
           </Button>
-          <YourNFT address={account ? account!.getSender() : ""} />
+          <YourNFT address={store?.account ? store.account.getSender() : ""} />
         </RenderIf>
       </div>
     </Web3Context.Provider>

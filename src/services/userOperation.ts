@@ -1,44 +1,66 @@
 import { ethers } from "ethers";
-import { Client, Presets } from "userop";
+import { Presets } from "userop";
+import { ContractAddress } from "@/configs/addressOp";
+import { ChainId } from "@/enums/web3Auth";
 
 class UserOperationService {
+  public chainId: string;
   protected privateKey: string;
-  protected rpcUrl: string;
   protected paymasterUrl: string;
 
   protected paymaster: any;
-  protected client: Client | null;
   protected account: Presets.Builder.SimpleAccount | null;
 
   protected provider: ethers.providers.JsonRpcProvider;
+  protected signer: ethers.Wallet;
 
-  public entryPoint: string = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789";
-  public accountFactory: string = "0x9406Cc6185a346906296840746125a0E44976454";
+  public rpcUrl: string;
+  public entryPoint: string = "";
+  public accountFactory: string = "";
 
   constructor(
     privateKey: string,
     rpcUrl: string = process.env.NEXT_PUBLIC_RPC_URL as string,
-    paymasterUrl: string = process.env.NEXT_PUBLIC_PAYMASTER_URL as string
+    paymasterUrl: string = process.env.NEXT_PUBLIC_PAYMASTER_URL as string,
+    chainId: string = ChainId.GOERLI
   ) {
     this.privateKey = privateKey;
     this.rpcUrl = rpcUrl;
     this.paymasterUrl = paymasterUrl;
     this.paymaster = null;
-    this.client = null;
     this.account = null;
     this.provider = new ethers.providers.JsonRpcProvider(this.rpcUrl);
+    this.signer = new ethers.Wallet(privateKey, this.provider);
+    this.entryPoint = ContractAddress[chainId]!.entryPoint;
+    this.accountFactory = ContractAddress[chainId]!.accountFactory;
+    this.chainId = chainId;
   }
 
   getProvider(): ethers.providers.JsonRpcProvider {
     return this.provider;
   }
 
-  getRpcUrl(): string {
-    return this.rpcUrl;
+  getSigner(): ethers.Wallet {
+    return this.signer;
   }
 
   getPaymasterUrl(): string {
     return this.paymasterUrl;
+  }
+
+  getAccount(): Presets.Builder.SimpleAccount {
+    if (!this.account) {
+      throw new Error("Please create account first!");
+    }
+    return this.account;
+  }
+
+  async getBalance(): Promise<ethers.BigNumber> {
+    if (!this.account) {
+      throw new Error("Please create account first!");
+    }
+    const balance = this.provider.getBalance(this.account!.getSender());
+    return balance;
   }
 
   buildPaymaster() {
@@ -63,7 +85,7 @@ class UserOperationService {
     this.paymasterUrl = paymasterUrl;
   }
 
-  async createAccount(): Promise<Presets.Builder.SimpleAccount> {
+  async createAccount(): Promise<UserOperationService> {
     const account = await Presets.Builder.SimpleAccount.init(
       new ethers.Wallet(this.privateKey) as any,
       this.rpcUrl,
@@ -72,25 +94,7 @@ class UserOperationService {
       this.paymaster
     );
     this.account = account;
-    return account;
-  }
-
-  async simpleTransfer(
-    to: string,
-    amount: ethers.BigNumber
-  ): Promise<any | null> {
-    const client = await Client.init(this.rpcUrl, this.entryPoint);
-    const res = await client.sendUserOperation(
-      this.account!.execute(to, amount, "0x"),
-      {
-        onBuild: (op) => console.log("Signed UserOperation:", op),
-      }
-    );
-    console.log(`UserOpHash: ${res.userOpHash}`);
-
-    console.log("Waiting for transaction...");
-    const transaction = await res.wait();
-    return transaction;
+    return this;
   }
 }
 

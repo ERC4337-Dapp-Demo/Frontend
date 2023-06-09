@@ -8,9 +8,10 @@ import { useContext } from "react";
 import { Web3Context, Web3ContextType } from "@/contexts/web3Context";
 
 const YourNFT: React.FC<{ address: string }> = ({ address }) => {
-  const { account } = useContext<Web3ContextType | null>(
+  const { store } = useContext<Web3ContextType | null>(
     Web3Context
   ) as Web3ContextType;
+  console.log(store);
   const { data, refetch } = useGetAllNfts(address);
 
   return (
@@ -33,6 +34,8 @@ const YourNFT: React.FC<{ address: string }> = ({ address }) => {
                 item={item}
                 state={NftItemState.INVENTORY}
                 isOwned={false}
+                execution={store!.executionOpService}
+                userOperation={store!.userOpService}
                 key={index}
               />
             );

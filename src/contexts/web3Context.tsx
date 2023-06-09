@@ -1,19 +1,18 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { createContext } from "react";
 import Web3AuthService from "@/services/web3Auth";
 import UserOperationService from "@/services/userOperation";
 import { Presets } from "userop";
-import { ethers } from "ethers";
+import ExecutionOpService from "@/services/executionOp";
+
+export interface Web3StoreInterface {
+  web3AuthService: Web3AuthService;
+  userOpService: UserOperationService;
+  executionOpService: ExecutionOpService;
+  account: Presets.Builder.SimpleAccount;
+}
 
 export interface Web3ContextType {
-  web3AuthService: Web3AuthService | null;
-  useropService: UserOperationService | null;
-  setUseropService: React.Dispatch<
-    React.SetStateAction<UserOperationService | null>
-  >;
-  account: Presets.Builder.SimpleAccount | null;
-  setAccount: React.Dispatch<
-    React.SetStateAction<Presets.Builder.SimpleAccount | null>
-  >;
+  store: Web3StoreInterface | null;
 }
 
 const Web3Context = createContext<Web3ContextType | null>(null);
