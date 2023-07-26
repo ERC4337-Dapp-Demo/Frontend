@@ -31,6 +31,7 @@ class UserOperationService {
     paymasterUrl: string = process.env.NEXT_PUBLIC_PAYMASTER_URL as string,
     chainId: string = ChainId.GOERLI,
   ) {
+    console.log(privateKey)
     this.privateKey = privateKey
     this.rpcUrl = rpcUrl
     this.paymasterUrl = paymasterUrl
